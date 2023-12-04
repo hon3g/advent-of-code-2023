@@ -187,7 +187,29 @@ def day3_part2(lines):
     return res
 
 
+def day4_part1(lines):
+    res = 0
+    for line in lines:
+        win, has = line.split(': ')[1].split(' | ')
+        get = set(win.split()) & set(has.split())
+        res += 1 << len(get) >> 1
+    return res
+
+
+def day4_part2(lines):
+    n = len(lines)
+    hmap = {}
+    for i, line in enumerate(lines):
+        win, has = line.split(': ')[1].split(' | ')
+        get = set(win.split()) & set(has.split())
+
+        hmap[i] = hmap.get(i, 1)
+        for j in range(i + 1, min(n, i + len(get) + 1)):
+            hmap[j] = hmap.get(j, 1) + hmap[i]
+    return sum(hmap.values())
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day3_part2(lines))
+    print(day4_part2(lines))
