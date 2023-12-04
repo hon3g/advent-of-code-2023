@@ -101,7 +101,6 @@ def day2_part2(lines):
                     green = max(green, n)
                 else:
                     blue = max(blue, n)
-
         return red * green * blue
 
     return sum(count(line) for line in lines)
@@ -140,7 +139,6 @@ def day3_part1(lines):
                     res += num
                 num = 0
                 yes = False
-
     return res
 
 
@@ -183,7 +181,6 @@ def day3_part2(lines):
     for nums in hmap.values():
         if len(nums) == 2:
             res += nums[0] * nums[1]
-
     return res
 
 
