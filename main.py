@@ -257,8 +257,8 @@ def day5_part2(lines):
                 if start < left:
                     new.append([start, left - 1])
                 start = right + 1
-            if not new:
-                new = [[start, end]]
+            if start <= end:
+                new.append([start, end])
         intervals = new
 
     return min(x[0] for x in intervals)
@@ -290,4 +290,4 @@ def day6_part2(lines):
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day5_part2(lines))
+    print(day6_part2(lines))
