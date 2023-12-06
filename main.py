@@ -206,7 +206,67 @@ def day4_part2(lines):
     return sum(hmap.values())
 
 
+def day5_part1(lines):
+    res = float('inf')
+    for a in map(int, lines[0].split(': ')[1].split()):
+        mapping = []
+        for row in lines[2:] + ['\n']:
+            if row == '\n':
+                for yxl in mapping[1:]:
+                    y, x, l = map(int, yxl.split())
+                    if x <= a < x + l:
+                        a = y + a - x
+                        break
+                mapping.clear()
+            else:
+                mapping.append(row)
+        res = min(res, a)
+    return res
+
+
+def day5_part2(lines):
+    ranges = []
+    for x in map(int, lines[0].split(': ')[1].split()):
+        if not ranges or len(ranges[-1]) == 2:
+            ranges.append([x])
+        else:
+            ranges[-1].append(ranges[-1][0] + x - 1)
+
+    mappings = []
+    for line in lines[2:]:
+        if 'map' in line:
+            mappings.append([])
+        elif line[0].isdigit():
+            y, x, r = map(int, line.split())
+            mappings[-1].append([y, x, r])
+
+    for mapping in mappings:
+        new = []
+        for start, end in ranges:
+            used = []
+
+            for dst, src, length in mapping:
+                left = max(start, src)
+                right = min(end, src + length - 1)
+                if left <= right:
+                    diff = dst - src
+                    new.append([left + diff, right + diff])
+                    used.append([left, right])
+
+            for left, right in sorted(used):
+                if start < left:
+                    new.append([start, left - 1])
+                start = right + 1
+                if end < start:
+                    break
+            if not new:
+                new = [[start, end]]
+        ranges = new
+
+    return min(x[0] for x in ranges)
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day4_part2(lines))
+    print(day5_part2(lines))
