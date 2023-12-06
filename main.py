@@ -225,24 +225,24 @@ def day5_part1(lines):
 
 
 def day5_part2(lines):
-    ranges = []
+    intervals = []
     for x in map(int, lines[0].split(': ')[1].split()):
-        if not ranges or len(ranges[-1]) == 2:
-            ranges.append([x])
+        if not intervals or len(intervals[-1]) == 2:
+            intervals.append([x])
         else:
-            ranges[-1].append(ranges[-1][0] + x - 1)
+            intervals[-1].append(intervals[-1][0] + x - 1)
 
     mappings = []
     for line in lines[2:]:
         if 'map' in line:
             mappings.append([])
         elif line[0].isdigit():
-            y, x, r = map(int, line.split())
-            mappings[-1].append([y, x, r])
+            dst, src, length = map(int, line.split())
+            mappings[-1].append([dst, src, length])
 
     for mapping in mappings:
         new = []
-        for start, end in ranges:
+        for start, end in intervals:
             used = []
 
             for dst, src, length in mapping:
@@ -261,12 +261,35 @@ def day5_part2(lines):
                     break
             if not new:
                 new = [[start, end]]
-        ranges = new
+        intervals = new
 
-    return min(x[0] for x in ranges)
+    return min(x[0] for x in intervals)
+
+
+def day6_part1(lines):
+    time = map(int, lines[0].split()[1:])
+    dist = map(int, lines[1].split()[1:])
+    res = 1
+    for t, d in zip(time, dist):
+        sub = 0
+        for i in range(t):
+            if i * (t - i) > d:
+                sub += 1
+        res *= sub
+    return res
+
+
+def day6_part2(lines):
+    time = int(''.join(lines[0].split()[1:]))
+    dist = int(''.join(lines[1].split()[1:]))
+    res = 0
+    for i in range(time):
+        if i * (time - i) > dist:
+            res += 1
+    return res
 
 
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day5_part2(lines))
+    print(day6_part2(lines))
