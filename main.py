@@ -314,9 +314,9 @@ def day7_part2(lines):
         if jokers == 5:
             cnt['J'] = 5
         else:
-            max_k = max(cnt.keys(), key=lambda k: cnt[k])
-            for k in cnt:
-                if k == max_k:
+            max_v = max(cnt.values())
+            for k, v in cnt.items():
+                if v == max_v:
                     cnt[k] += jokers
                     break
 
