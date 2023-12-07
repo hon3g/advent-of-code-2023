@@ -302,14 +302,12 @@ def day7_part1(lines):
 
 
 def day7_part2(lines):
-    from collections import Counter, defaultdict
+    from collections import Counter
 
     cards = 'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'
 
-    hmap = defaultdict(list)
-    for line in lines:
-        hand, bid = line.split()
-
+    def sort_key(line):
+        hand = line.split()[0]
         cnt = Counter([c for c in hand if c != 'J'])
         jokers = len([c for c in hand if c == 'J'])
 
@@ -324,14 +322,12 @@ def day7_part2(lines):
 
         vals = sorted(cnt.values(), reverse=True)
         vals = vals + [1] * (5 - len(vals))
-        hmap[tuple(vals)].append((hand, bid))
+        return vals, [-cards.index(c) for c in hand]
 
-    res = rank = 0
-    for _, hand_bid in sorted(hmap.items(), key=lambda x: x[0]):
-        hand_bid.sort(key=lambda x: [-cards.index(c) for c in x[0]])
-        for _, bid in hand_bid:
-            rank += 1
-            res += int(bid) * rank
+    res = 0
+    for rank, line in enumerate(sorted(lines, key=sort_key), 1):
+        _, bid = line.split()
+        res += int(bid) * rank
     return res
 
 
