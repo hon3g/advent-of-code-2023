@@ -29,13 +29,11 @@ def day1_part2(lines):
     res = 0
     for line in lines:
         x = ''
-
         s = ''
         for c in line:
             if c.isdigit():
                 x += c
                 break
-
             s = s + c
             for k, v in hmap.items():
                 if s.endswith(k):
@@ -43,13 +41,11 @@ def day1_part2(lines):
                     break
             if len(x) == 1:
                 break
-
         s = ''
         for c in line[::-1]:
             if c.isdigit():
                 x += c
                 break
-
             s = c + s
             for k, v in hmap.items():
                 if s.startswith(k):
@@ -287,7 +283,59 @@ def day6_part2(lines):
     return res
 
 
+def day7_part1(lines):
+    from collections import Counter
+
+    cards = 'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'
+
+    def sort_key(line):
+        hand = line.split()[0]
+        vals = sorted(Counter(hand).values(), reverse=True)
+        vals = vals + [1] * (5 - len(vals))
+        return [x for x in vals], [-cards.index(c) for c in hand]
+
+    res = 0
+    for rank, line in enumerate(sorted(lines, key=sort_key), 1):
+        _, bid = line.split()
+        res += int(bid) * rank
+    return res
+
+
+def day7_part2(lines):
+    from collections import Counter, defaultdict
+
+    cards = 'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'
+
+    hmap = defaultdict(list)
+    for line in lines:
+        hand, bid = line.split()
+
+        cnt = Counter([c for c in hand if c != 'J'])
+        jokers = len([c for c in hand if c == 'J'])
+
+        if jokers == 5:
+            cnt['J'] = 5
+        else:
+            max_k = max(cnt.keys(), key=lambda k: cnt[k])
+            for k in cnt:
+                if k == max_k:
+                    cnt[k] += jokers
+                    break
+
+        vals = sorted(cnt.values(), reverse=True)
+        vals = vals + [1] * (5 - len(vals))
+        hmap[tuple(vals)].append((hand, bid))
+
+    res = rank = 0
+    for _, hand_bid in sorted(hmap.items(), key=lambda x: x[0]):
+        hand_bid.sort(key=lambda x: [-cards.index(c) for c in x[0]])
+        for _, bid in hand_bid:
+            rank += 1
+            res += int(bid) * rank
+    return res
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day6_part2(lines))
+    print(day7_part2(lines))
