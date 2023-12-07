@@ -292,7 +292,7 @@ def day7_part1(lines):
         hand = line.split()[0]
         vals = sorted(Counter(hand).values(), reverse=True)
         vals = vals + [1] * (5 - len(vals))
-        return [x for x in vals], [-cards.index(c) for c in hand]
+        return vals, [-cards.index(c) for c in hand]
 
     res = 0
     for rank, line in enumerate(sorted(lines, key=sort_key), 1):
