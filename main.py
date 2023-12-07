@@ -311,16 +311,8 @@ def day7_part2(lines):
         cnt = Counter([c for c in hand if c != 'J'])
         jokers = len([c for c in hand if c == 'J'])
 
-        if jokers == 5:
-            cnt['J'] = 5
-        else:
-            max_v = max(cnt.values())
-            for k, v in cnt.items():
-                if v == max_v:
-                    cnt[k] += jokers
-                    break
-
-        vals = sorted(cnt.values(), reverse=True)
+        vals = sorted(cnt.values(), reverse=True) or [0]
+        vals[0] += jokers
         vals = vals + [1] * (5 - len(vals))
         return vals, [-cards.index(c) for c in hand]
 
