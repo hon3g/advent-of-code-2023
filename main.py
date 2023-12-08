@@ -291,7 +291,6 @@ def day7_part1(lines):
     def sort_key(line):
         hand = line.split()[0]
         vals = sorted(Counter(hand).values(), reverse=True)
-        vals = vals + [1] * (5 - len(vals))
         return vals, [-cards.index(c) for c in hand]
 
     res = 0
@@ -313,7 +312,6 @@ def day7_part2(lines):
 
         vals = sorted(cnt.values(), reverse=True) or [0]
         vals[0] += jokers
-        vals = vals + [1] * (5 - len(vals))
         return vals, [-cards.index(c) for c in hand]
 
     res = 0
@@ -326,4 +324,4 @@ def day7_part2(lines):
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day7_part2(lines))
+    print(day7_part1(lines))
