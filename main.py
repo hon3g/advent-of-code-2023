@@ -286,15 +286,17 @@ def day6_part2(lines):
 def day7_part1(lines):
     from collections import Counter
 
-    cards = 'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'
+    cards = 'AKQJT98765432'
 
     def sort_key(line):
         hand = line.split()[0]
-        vals = sorted(Counter(hand).values(), reverse=True)
+        vals = sorted(Counter(hand).values())[::-1]
         return vals, [-cards.index(c) for c in hand]
 
+    lines.sort(key=sort_key)
+
     res = 0
-    for rank, line in enumerate(sorted(lines, key=sort_key), 1):
+    for rank, line in enumerate(lines, 1):
         _, bid = line.split()
         res += int(bid) * rank
     return res
@@ -303,19 +305,21 @@ def day7_part1(lines):
 def day7_part2(lines):
     from collections import Counter
 
-    cards = 'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'
+    cards = 'AKQT98765432J'
 
     def sort_key(line):
         hand = line.split()[0]
         cnt = Counter([c for c in hand if c != 'J'])
         jokers = len([c for c in hand if c == 'J'])
 
-        vals = sorted(cnt.values(), reverse=True) or [0]
+        vals = sorted(cnt.values())[::-1] or [0]
         vals[0] += jokers
         return vals, [-cards.index(c) for c in hand]
 
+    lines.sort(key=sort_key)
+
     res = 0
-    for rank, line in enumerate(sorted(lines, key=sort_key), 1):
+    for rank, line in enumerate(lines, 1):
         _, bid = line.split()
         res += int(bid) * rank
     return res
@@ -324,4 +328,4 @@ def day7_part2(lines):
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day7_part1(lines))
+    print(day7_part2(lines))
