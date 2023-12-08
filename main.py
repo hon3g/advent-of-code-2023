@@ -327,7 +327,53 @@ def day7_part2(lines):
     return res
 
 
+def day8_part1(lines):
+    from collections import defaultdict
+
+    adj = defaultdict(dict)
+    for line in lines[2:]:
+        u, l_r = line.rstrip().split(' = ')
+        l, r = l_r.split(', ')
+        adj[u]['L'] = l[1:]
+        adj[u]['R'] = r[:-1]
+
+    ds = lines[0].rstrip()
+    n = len(ds)
+
+    u = 'AAA'
+    i = 0
+    while u != 'ZZZ':
+        u = adj[u][ds[i % n]]
+        i += 1
+    return i
+
+
+def day8_part2(lines):
+    from collections import defaultdict
+    from math import lcm
+
+    adj = defaultdict(dict)
+    for line in lines[2:]:
+        u, l_r = line.rstrip().split(' = ')
+        l, r = l_r.split(', ')
+        adj[u]['L'] = l[1:]
+        adj[u]['R'] = r[:-1]
+
+    ds = lines[0].rstrip()
+    n = len(ds)
+
+    res = []
+    for u in [u for u in adj if u[-1] == 'A']:
+        i = 0
+        while u[-1] != 'Z':
+            u = adj[u][ds[i % n]]
+            i += 1
+        res.append(i)
+
+    return lcm(*res)
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day7_part2(lines))
+    print(day8_part2(lines))
