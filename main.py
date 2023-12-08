@@ -312,10 +312,8 @@ def day7_part2(lines):
         hand = line.split()[0]
 
         cnt = Counter([c for c in hand if c != 'J'])
-        jokers = len([c for c in hand if c == 'J'])
-
         vals = sorted(cnt.values())[::-1] or [0]
-        vals[0] += jokers
+        vals[0] += hand.count('J')
         ordr = [-cards.index(c) for c in hand]
 
         return vals, ordr
