@@ -286,12 +286,14 @@ def day6_part2(lines):
 def day7_part1(lines):
     from collections import Counter
 
-    cards = 'AKQJT98765432'
-
     def sort_key(line):
+        cards = 'AKQJT98765432'
         hand = line.split()[0]
+
         vals = sorted(Counter(hand).values())[::-1]
-        return vals, [-cards.index(c) for c in hand]
+        ordr = [-cards.index(c) for c in hand]
+
+        return vals, ordr
 
     lines.sort(key=sort_key)
 
@@ -305,16 +307,18 @@ def day7_part1(lines):
 def day7_part2(lines):
     from collections import Counter
 
-    cards = 'AKQT98765432J'
-
     def sort_key(line):
+        cards = 'AKQT98765432J'
         hand = line.split()[0]
+
         cnt = Counter([c for c in hand if c != 'J'])
         jokers = len([c for c in hand if c == 'J'])
 
         vals = sorted(cnt.values())[::-1] or [0]
         vals[0] += jokers
-        return vals, [-cards.index(c) for c in hand]
+        ordr = [-cards.index(c) for c in hand]
+
+        return vals, ordr
 
     lines.sort(key=sort_key)
 
