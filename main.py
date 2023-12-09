@@ -373,7 +373,37 @@ def day8_part2(lines):
     return lcm(*res)
 
 
+def day9_part1(lines):
+
+    def diff(nums):
+        if all(x == 0 for x in nums):
+            return 0
+        nums = [y - x for x, y in zip(nums, nums[1:])]
+        return nums[-1] + diff(nums)
+
+    res = 0
+    for line in lines:
+        nums = [int(x) for x in line.split()]
+        res += nums[-1] + diff(nums)
+    return res
+
+
+def day9_part2(lines):
+
+    def diff(nums):
+        if all(x == 0 for x in nums):
+            return 0
+        nums = [x - y for x, y in zip(nums, nums[1:])]
+        return nums[-1] - diff(nums)
+
+    res = 0
+    for line in lines:
+        nums = [int(x) for x in line.split()][::-1]
+        res += nums[-1] - diff(nums)
+    return res
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day8_part2(lines))
+    print(day9_part2(lines))
