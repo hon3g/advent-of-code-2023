@@ -403,7 +403,85 @@ def day9_part2(lines):
     return res
 
 
+def day10_part1(lines):
+    mat = [l.rstrip() for l in lines]
+    n, m = len(mat), len(mat[0])
+
+    right, down, left, up = (0, 1), (1, 0), (0, -1), (-1, 0)
+    pipes = {
+        'S': [right, down, left, up],
+        '|': [up, down],
+        '-': [left, right],
+        'L': [up, right],
+        'J': [up, left],
+        '7': [left, down],
+        'F': [right, down],
+    }
+
+    def valid(x, y, nxt):
+        if (x, y) == right:
+            return nxt in '-J7S'
+        if (x, y) == down:
+            return nxt in '|LJS'
+        if (x, y) == left:
+            return nxt in '-LFS'
+        if (x, y) == up:
+            return nxt in '|7FS'
+
+    start = 0, 0
+    for i in range(n):
+        for j in range(m):
+            if mat[i][j] == 'S':
+                start = i, j
+                break
+
+    stack = [[start]]
+    while stack:
+        path = stack.pop()
+        i, j = path[-1]
+        if (i, j) == start and len(path) > 1:
+            return path[:-1]
+
+        for x, y in pipes[mat[i][j]]:
+            r, c = i + x, j + y
+            if r in (-1, n) or c in (-1, m) \
+                    or mat[r][c] == '.' \
+                    or not valid(x, y, mat[r][c]):
+                continue
+            nxt = r, c
+            if len(path) > 1 and path[-2] == nxt:
+                continue
+            stack.append(path + [nxt])
+
+
+def day10_part2(lines):
+    mat = [l.rstrip() for l in lines]
+    n, m = len(mat), len(mat[0])
+
+    path = day10_part1(lines)
+    s, x, y = path[0], path[1], path[-1]
+    x, y = sorted([x, y])
+
+    edges = '|LJ'
+    if (x[0] + 1, x[1]) == s and (
+            (y[0] - 1, y[1]) == s or  # S == |
+            (y[0], y[1] - 1) == s or  # S == L
+            (y[0], y[1] + 1) == s):   # S == J
+        edges += 'S'
+
+    res, path = 0, set(path)
+    for i in range(n):
+        ray = 0
+        for j in range(m):
+            in_path = (i, j) in path
+            if in_path and mat[i][j] in edges:
+                ray += 1
+            if not in_path and ray % 2:
+                res += 1
+    return res
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day9_part2(lines))
+    print(day10_part2(lines))
