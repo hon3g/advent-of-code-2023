@@ -481,7 +481,81 @@ def day10_part2(lines):
     return res
 
 
+def day11_part1(lines):
+    mat = [l.rstrip() for l in lines]
+
+    mat2 = []
+    for r in mat:
+        if all(x == '.' for x in r):
+            mat2.extend([r, r])
+        else:
+            mat2.append(r)
+
+    mat = []
+    for c in zip(*mat2):
+        if all(x == '.' for x in c):
+            mat.extend([c, c])
+        else:
+            mat.append(c)
+
+    mat = list(zip(*mat))
+    gls = []
+    for i in range(len(mat)):
+        for j in range(len(mat[0])):
+            if mat[i][j] == '#':
+                gls.append((i, j))
+
+    res = 0
+    for i in range(len(gls)):
+        x1, y1 = gls[i]
+        for j in range(i + 1, len(gls)):
+            x2, y2 = gls[j]
+            res += abs(x2 - x1)
+            res += abs(y2 - y1)
+    return res
+
+
+def day11_part2(lines):
+    mat = [l.rstrip() for l in lines]
+
+    expanded_rows = set()
+    for i, r in enumerate(mat):
+        if all(x == '.' for x in r):
+            expanded_rows.add(i)
+
+    expanded_cols = set()
+    for j, c in enumerate(zip(*mat)):
+        if all(x == '.' for x in c):
+            expanded_cols.add(j)
+
+    gls = []
+    for i in range(len(mat)):
+        for j in range(len(mat[0])):
+            if mat[i][j] == '#':
+                gls.append((i, j))
+
+    res = 0
+    for i in range(len(gls)):
+        for j in range(i + 1, len(gls)):
+            x1, y1 = gls[i]
+            x2, y2 = gls[j]
+
+            x1, x2 = sorted([x1, x2])
+            y1, y2 = sorted([y1, y2])
+
+            for x in range(x1, x2):
+                if x in expanded_rows:
+                    x2 += 1000000 - 1
+
+            for y in range(y1, y2):
+                if y in expanded_cols:
+                    y2 += 1000000 - 1
+
+            res += (x2 - x1) + (y2 - y1)
+    return res
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day10_part2(lines))
+    print(day11_part2(lines))
