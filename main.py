@@ -555,7 +555,60 @@ def day11_part2(lines):
     return res
 
 
+def day12_part1(lines):
+
+    def extend(perm, s, nums):
+        if len(perm) == len(s):
+            nums1 = [int(x) for x in nums.split(',')]
+            nums2 = [len(s) for s in ''.join(perm).split('.') if s]
+            return int(nums1 == nums2)
+
+        x = s[len(perm)]
+        res = 0
+        if x == '?':
+            res += extend(perm + ['.'], s, nums)
+            res += extend(perm + ['#'], s, nums)
+        else:
+            res += extend(perm + [x], s, nums)
+        return res
+
+    return sum(extend([], *l.split()) for l in lines)
+
+
+def day12_part2(lines):
+    from functools import cache
+
+    res = 0
+    for line in lines:
+        s, nums = line.split()
+        s = '?'.join([s] * 5)
+        s = '.'.join([x for x in s.split('.') if x])
+        nums = [int(x) for x in nums.split(',')] * 5
+
+        n, m = len(s), len(nums)
+
+        @cache
+        def dp(i, j):
+            if j == m:
+                return int('#' not in s[i:])
+            if i >= n:
+                return 0
+
+            res = 0
+            for l in range(i, n):
+                if '#' in s[i:l]: break
+                r = l + nums[j]
+                if (len(s[l:r]) == nums[j] and
+                    '.' not in s[l:r] and
+                    (r == n or s[r] != '#')):
+                    res += dp(r + 1, j + 1)
+            return res
+
+        res += dp(0, 0)
+    return res
+
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         lines = f.readlines()
-    print(day11_part2(lines))
+    print(day12_part2(lines))
