@@ -591,9 +591,6 @@ def day12_part2(lines):
         def dp(i, j):
             if j == m:
                 return int('#' not in s[i:])
-            if i >= n:
-                return 0
-
             res = 0
             for l in range(i, n):
                 if '#' in s[i:l]: break
